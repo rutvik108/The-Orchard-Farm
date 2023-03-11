@@ -1,0 +1,65 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class TheOrchardFarm {
+    public static void main(String []args){
+        Scanner sc=new Scanner(System.in);
+        //earnings per tree and days to grow
+        long [][] treeData={{12000,10},{10000,6},{27500,15},{7500,5},{8000,15}};
+        //testcases
+        int t=sc.nextInt();
+        //at last store the maxprofit for each test cases
+        long res[]=new long[t];
+        for(int i=0; i<t; i++){
+            //number of trees
+            int n=sc.nextInt();
+            //number of days
+            int d=sc.nextInt();
+            //count the profit
+            long maxprofit=0;
+            //keep data how many tree more required to plant
+            int remainTrees=n;
+
+            //array to store the earning per tree in d days
+            long [] earning=new long[5];
+            //count the total earnings per tree based on the d days
+            for(int j=0; j<treeData.length; j++){
+                earning[j] =(long) treeData[j][0]*(d/treeData[j][1]);
+//                System.out.println(earning[j]);
+            }
+            //sort the earning by the most earning to least earning
+            Arrays.sort(earning);
+
+            //we plant all tree at least once
+            for(int j=4; j>=0; j--){
+                maxprofit+=earning[j];
+                remainTrees--;
+            }
+
+            //now plant tree if remains
+            //but here one cache we maximum plant any tree in farm is 40% and also do -1 because we already
+            //plant once
+            double maxi=(n * 0.4)-1;
+            int index=4;
+            while(remainTrees>0){
+                if(remainTrees > maxi){
+                    //add the tree which gives you maximum earning
+                    remainTrees-=maxi;
+                    maxprofit+=earning[index]*maxi;
+                }
+                else{
+                    //for remain trees if not able to plant 40 perecent of same tree
+                    maxprofit+=remainTrees*earning[index];
+                    break;
+                }
+                index--;
+            }
+            //store result value
+            res[i]=maxprofit;
+        }
+        //print the out put
+        for(int i=0; i<t; i++){
+            System.out.println("Case #"+ (i+1) +": "+res[i]);
+        }
+    }
+}
